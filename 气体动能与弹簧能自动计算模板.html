@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>气体动能与弹簧能计算器</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    input { width: 100px; margin: 5px; }
+    label { display: inline-block; width: 200px; }
+    .result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>气体动能与弹簧能计算器</h2>
+
+  <div>
+    <label>常压体积 (mL):</label>
+    <input type="number" id="v0" value="100"><br>
+
+    <label>容器体积 (mL):</label>
+    <input type="number" id="v1" value="50"><br>
+
+    <label>钢珠质量 (kg):</label>
+    <input type="number" id="mass" value="0.02"><br>
+
+    <label>弹簧刚度 (N/m):</label>
+    <input type="number" id="k" value="800"><br>
+
+    <label>弹簧压缩行程 (m):</label>
+    <input type="number" id="x" value="0.05"><br>
+
+    <button onclick="calculate()">计算</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const v0 = parseFloat(document.getElementById('v0').value);
+      const v1 = parseFloat(document.getElementById('v1').value);
+      const mass = parseFloat(document.getElementById('mass').value);
+      const k = parseFloat(document.getElementById('k').value);
+      const x = parseFloat(document.getElementById('x').value);
+
+      const gamma = 1.4;
+      const p_mpa = 0.1 * v0 / v1;
+      const p_pa = p_mpa * 1e6;
+      const v_m3 = v1 / 1e6;
+
+      const energy = (p_pa * v_m3) / (gamma - 1) * (1 - Math.pow(0.1 / p_mpa, (gamma - 1) / gamma));
+      const speed = Math.sqrt(2 * energy / mass);
+      const spring_energy = 0.5 * k * x * x;
+
+      document.getElementById('result').innerHTML = `
+        气体释放能量: ${energy.toFixed(2)} J<br>
+        钢珠速度: ${speed.toFixed(2)} m/s<br>
+        弹簧储能: ${spring_energy.toFixed(2)} J
+      `;
+    }
+  </script>
+</body>
+</html>
